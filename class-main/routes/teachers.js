@@ -33,5 +33,15 @@ teachers.delete("/teachers/:clave", async (req, res) => {
   }
   return res.json(result.rows);
 })
+teachers.patch("/teachers/:clave", async (req, res) => {
+  const clave = req.params.clave;
+  const { nombre, grado } = req.body;
+  if (!nombre || !grado) return res.status(400).send("Information missing");
+  const result = await client.query("UPDATE teachers SET nombre = $1, grado = $2 WHERE clave = $3", [nombre, grado, clave]);
+  if (result.rowCount != 1) {
+    return res.status(400).send("CLAVE INVALIDA");
+  }
+  return res.json(result.rows);
+})
 
 export default teachers;
